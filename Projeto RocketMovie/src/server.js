@@ -9,9 +9,6 @@ app.use(express.json());
 
 app.use(routes);
 
-
-
-
 //Tratamento de erros:
 app.use(( error, request, response, next) => { //
     if(error instanceof AppError){ //Se a instancia dele for de uma execessão de appError:
