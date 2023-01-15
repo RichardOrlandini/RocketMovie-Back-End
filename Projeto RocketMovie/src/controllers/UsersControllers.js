@@ -8,6 +8,7 @@ class UsersControllers {
     
    async create(request, response){
         const {name, email, password} = request.query;
+        
         console.log(name,email,password)
 
         if (!name || !email || !password){
