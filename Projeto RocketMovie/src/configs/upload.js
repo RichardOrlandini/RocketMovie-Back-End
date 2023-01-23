@@ -16,7 +16,7 @@ const MULTER = {
       return callback(null, fileName);
     }
   })
-}
+} 
 
 module.exports = {
   TMP_FOLDER,
