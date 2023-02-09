@@ -1,10 +1,10 @@
-const knex = require("../../knexfile");
+const knex = require("../database/knex");
 
 class TagsControllers {
-    async index(request, response){
-        const {user_id} = request.query;
+    async index(request, response){ // listar todas as tags cadastradas do usuario
+        const {user_id} = request.params;
 
-        const tags =  knex("tags").where("id", user_id).then(a => console.log(a))
+        const tags =  await knex("tags").where({user_id})
 
         return response.json(tags);
     }

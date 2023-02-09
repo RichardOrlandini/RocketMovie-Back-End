@@ -17,4 +17,6 @@ exports.up = knex => knex.schema.createTable("notes", table => {
  * @returns { Promise<void> }
  */
 
-exports.down = knex =>  knex.schema.dropTable("movies_notes");
+exports.down = knex =>  knex.schema.dropTable("notes");
+
+
