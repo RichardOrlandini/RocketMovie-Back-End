@@ -29,7 +29,7 @@ function  ensureAuthenticated(request, response, next){
 
        return next(); // chamamos a proxima função ao lado do middleware
 
-    } catch (error) {
+    } catch {
         // caso o token seja invalido lançamos essa execssão.
         throw new AppError("JWT Token inválido", 401);
     }

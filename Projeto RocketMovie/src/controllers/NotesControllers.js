@@ -5,13 +5,13 @@ class NotesControllers {
 
     async create(request, response){
         const {title, description, tags, rating} = request.body;
-        const { user_id} = request.params;
+        const user_id = request.user.id;
 
         const note_id = await knex("notes").insert({
             title,
             description,
             rating,
-            user_id
+        user_id
         });// pegando o id da nota na variavel note_id
 
         const tagsInsert = tags.map(tagname => {
@@ -27,7 +27,8 @@ class NotesControllers {
     }
 
     async index(request, response){
-        const { user_id, title, tags  } = request.query;
+        const { title, tags  } = request.query;
+        const user_id = request.user.id;
 
         let notes;
         if(tags){
@@ -71,7 +72,6 @@ class NotesControllers {
 
     async show(request, response){
         const {note_id} = request.params;
-        const {user_id} = request.query
 
         const note = await knex("notes").where({id: note_id}).first();
         const tags = await knex("tags").where({note_id}).orderBy("tagname");

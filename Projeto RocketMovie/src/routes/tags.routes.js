@@ -1,10 +1,12 @@
 const {Router} = require('express');
-const tagsRoutes = Router();
 const TagsControllers  = require('../controllers/TagsControllers');
+const ensureAuthenticated = require("../middlewares/ensureAuthenticated");
+
+const tagsRoutes = Router();
 const tagsControllers = new TagsControllers();
 
 
-tagsRoutes.get("/:user_id", tagsControllers.index);
+tagsRoutes.get("/",ensureAuthenticated,  tagsControllers.index);
 
 
 
