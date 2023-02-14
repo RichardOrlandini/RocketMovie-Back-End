@@ -15,12 +15,15 @@ class UserCreateServices {
         const emailExist = await this.userRepository.findByEmail(email);
 
         if (emailExist) {
+            
             throw new AppError("Este email já  está em uso!")
         }
 
         const newPassword = await hash(password, 8);
 
-        await this.userRepository.create({ name, email, password:newPassword});
+       const userCreated = await this.userRepository.create({ name, email, password:newPassword});
+       
+       return userCreated;
     }
 }
 
