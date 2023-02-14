@@ -19,13 +19,11 @@ function  ensureAuthenticated(request, response, next){
        const {sub: user_id} =  verify(token, authConfig.jwt.secret);
        // a função verify verifica se e um jwt e se ele e um token valido
        // o sub e o conteudo que está armazenado no token, utilizamos um alias trocando para user_id
-      
        request.user = {
         id: Number(user_id),
        };
-
-       // criamos uma propriedade id no objeto user, convertendo o user_id em numero e despejando
-       // no id.
+       // criamos uma propriedade id no objeto user, convertendo o user_id em numero e despejando no id.
+       
 
        return next(); // chamamos a proxima função ao lado do middleware
 
