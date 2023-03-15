@@ -1,15 +1,19 @@
 require("express-async-errors"); 
 
+const cors = require("cors");
 const express = require("express");
 const routes = require('./routes');
 const AppError = require('./utils/AppError');
 
 const app  = express();
+
+app.use(cors());
 app.use(express.json()); 
 
 app.use(routes);
 
 //Tratamento de erros:
+
 app.use(( error, request, response, next) => { //
     if(error instanceof AppError){ //Se a instancia dele for de uma execessão de appError:
         return response.status(error.statusCode).json({
