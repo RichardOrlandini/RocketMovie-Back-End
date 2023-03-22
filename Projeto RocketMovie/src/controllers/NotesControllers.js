@@ -7,11 +7,11 @@ class NotesControllers {
         const {title, description, tags, rating} = request.body;
         const user_id = request.user.id;
 
-        const note_id = await knex("notes").insert({
+        const [note_id]  = await knex("notes").insert({
             title,
             description,
             rating,
-        user_id
+            user_id
         });// pegando o id da nota na variavel note_id
 
         const tagsInsert = tags.map(tagname => {
