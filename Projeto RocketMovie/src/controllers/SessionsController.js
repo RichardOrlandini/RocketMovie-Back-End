@@ -27,11 +27,7 @@ class SessionsController {
             subject: String(user.id),
             expiresIn
         })
-
-
-
         return response.json({user, token});
     }
 }
-
 module.exports = SessionsController;

@@ -3,34 +3,24 @@ const AppError = require("../utils/AppError");
 const authConfig = require("../configs/auth");
 
 function  ensureAuthenticated(request, response, next){
-    const authHeader = request.headers.authorization; // pegamos o token do header
+    const authHeader = request.headers.authorization; 
 
-    if (!authHeader){ // verificamos se ele esta informado
+    if (!authHeader){ 
         throw new AppError("JWT Token não informado", 401);
     }
-
-    const [, token] = authHeader.split(" "); // usamos o split para quebrar o texto pelos espaços
-
-    // armazenamos na posicão 1 do array o token, ja colocando seu nome
-
-    //Tratamento de execessos com o try
+    const [, token] = authHeader.split(" "); 
 
     try {
-       const {sub: user_id} =  verify(token, authConfig.jwt.secret);
-       // a função verify verifica se e um jwt e se ele e um token valido
-       // o sub e o conteudo que está armazenado no token, utilizamos um alias trocando para user_id
+       const {sub: user_id} = verify(token, authConfig.jwt.secret);
+
        request.user = {
         id: Number(user_id),
        };
-       // criamos uma propriedade id no objeto user, convertendo o user_id em numero e despejando no id.
-       
 
-       return next(); // chamamos a proxima função ao lado do middleware
+       return next(); 
 
     } catch {
-        // caso o token seja invalido lançamos essa execssão.
         throw new AppError("JWT Token inválido", 401);
     }
-}
-
+};
 module.exports = ensureAuthenticated;

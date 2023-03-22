@@ -4,15 +4,31 @@ class NotesControllers {
 
 
     async create(request, response){
-        const {title, description, tags, rating} = request.body;
+        const { user_name, title, description, rating, tags} = request.body;
         const user_id = request.user.id;
+
+        const validUser = await knex('users')
+        .where('name', user_name)
+        .andWhere('id', user_id);
+
+        if (validUser.length === 0) {
+            throw new AppError(
+              'Nao foi possivel criar a nota, usuario nao encontrado'
+            )
+        };
+
+        if (rating < 0 || rating > 5) {
+            throw new AppError(
+              'A nota do filme nao pode ser menor que zero, nem maior de 5'
+            )
+        }
 
         const note_id = await knex("notes").insert({
             title,
             description,
-            rating,
-        user_id
-        });// pegando o id da nota na variavel note_id
+            rating: Math.ceil(rating),
+            user_id
+        });
 
         const tagsInsert = tags.map(tagname => {
             return {
@@ -67,22 +83,20 @@ class NotesControllers {
     }
 
     async show(request, response){
-        const {note_id} = request.params;
+        const {id} = request.params;
 
-        const note = await knex("notes").where({id: note_id}).first();
-        const tags = await knex("tags").where({note_id}).orderBy("tagname");
-
-        return response.json({
-            ...note,
-            tags, 
-        });
+        const note = await knex("notes").where({id}).first();
+        const tags = await knex("tags").where({note_id: id}).orderBy("tagname");
+        const notes = {...note, tags}
+        
+        return response.json(notes);
     }
 
     async delete(request, response){
         const {note_id} = request.query;
         const user_id = request.user.id;
 
-        await knex("notes").where("id", note_id).whereAnd("user_id", user_id).first().delete();
+        await knex("notes").where("id", note_id).whereAnd("user_id", user_id).delete();
 
         return response.json();
     } 
