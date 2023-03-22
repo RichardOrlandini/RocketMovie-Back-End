@@ -7,7 +7,8 @@ class DiskStorage {
     await fs.promises.rename( //Mudar o arquivo de lugar
       path.resolve(uploadConfig.TMP_FOLDER, file),
       path.resolve(uploadConfig.UPLOADS_FOLDER, file) 
-    );
+    )
+    
     return file;
   }
 
@@ -23,5 +24,4 @@ class DiskStorage {
     await fs.promises.unlink(filePath);
   }
 }
-
 module.exports = DiskStorage;

@@ -3,9 +3,6 @@ const UserRepository = require("../repositories/UserRepository");
 const UserCreateServices = require("../services/UserCreateServices");
 const knex = require("../database/knex");
 
-
-
-
 class UsersControllers {
     
    async create(request, response){
@@ -19,47 +16,19 @@ class UsersControllers {
     }
     
     async update(request, response) {
-        
-      const user_id = request.user.id
-      const { name, email, password, new_password, avatar} = request.body
-  
-      const userExists = await knex('users').where({ email })
+      const { name, email, password, new_password, avatar } = request.body;
+      const user_id = request.user.id;
 
-      if (userExists.length === 1 && userExists[0].id !== user_id) {
-        throw new AppError('Email já cadastrado')
-      }
-  
-      if (password && new_password) {
-        const validUserPassword = await knex
-          .select('password')
-          .from('users')
-          .where('id', user_id)
-  
-        const checkOldPassword = await compare(
-          password,
-          validUserPassword[0].password
-        )
-        const att_password = await hash(new_password, 8)
-        if (!checkOldPassword) {
-          throw new AppError('A senha antiga nao confere')
-        }
-  
-        const user_update = await knex('users').where('id', user_id).update({
-          password: att_password
-        })
-      }
-      
+      const userRepository = new UserRepository();
+      const userCreateService =  new UserCreateService(userRepository);
+
+      await userCreateService.executeUpdate({name, email, password, new_password,  user_id});
+
       if (avatar){
         const user_update = await knex('users').where('id', user_id).update({
           avatar
         })
-
       }
-      const user_update = await knex('users').where('id', user_id).update({
-        name,
-        email,
-      })
-  
       return response.json()
     }
 
